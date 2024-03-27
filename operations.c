@@ -32,9 +32,9 @@ int Create(int priority) {
     process->message->content = (char *) malloc(sizeof (char) * MAX_MESSAGE_CHARACTERS);
 
     List_prepend(readyProcesses[priority], process);
-    List_prepend(runningProcesses, process);
-    printList(runningProcesses);
-    printList(readyProcesses[priority]);
+    // List_prepend(runningProcesses, process);
+    // printList(runningProcesses);
+    // printList(readyProcesses[priority]);
 
     return PID;
 }
