@@ -64,10 +64,32 @@ int Kill(int id) {
     return -1;
 }
 
+void ProcessSchedule() {
+    int highest_priority = -1;
+    for (int i = 0; i < PRIORITY; i++) {
+        if (List_count(readyProcesses[i])) {
+            highest_priority = i;
+            break;
+        }
+    }
+    if (highest_priority != -1) {
+        PCB *next_process = List_remove(readyProcesses[highest_priority]);
+        if(!List_append(runningProcesses, next_process)) {
+            next_process->state = RUNNING;
+            printf("Success! Process PID: %d now gets control of the CPU", next_process->ID);
+        } else {
+            printf("Failure! Process PID: %d doesn't get control of the CPU", next_process->ID );
+        }
+    } else {
+        printf("No process available to run\n");
+    }
+}
+
 int Exit() {
     List_last(runningProcesses);
     PCB * removedProcess = List_trim(runningProcesses);
     if(removedProcess) {
+        ProcessSchedule();
         return removedProcess->ID;
     }
     return -1;
