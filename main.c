@@ -14,6 +14,16 @@ int main() {
         scanf(" %c", &command);
         command = toupper(command);
         switch (command) {
+            case 'A':
+            {
+                int priority = 0;
+                do {
+                    printf("Enter Priority: ");
+                    scanf(" %d", &priority);
+                } while (priority != HIGH && priority != NORMAL && priority != LOW);
+                addToRunningProc(priority);
+                break;
+            }
             case 'C': {
                 printf("Create \n");
                 printf("create a process and put it on the appropriate ready Queue.\n");
@@ -49,6 +59,12 @@ int main() {
                 printf("Killed PID: %d \n", id);
                 break;
             }
+            case 'Q' :
+            {
+                printf("Quantum\n");
+                Quantum();
+                break;
+            }
             default: {
                 printf("Invalid Argument.\n");
                 break;
@@ -56,7 +72,7 @@ int main() {
         }
 
 
-    } while (command != 'Q');
+    } while (command != 'X');
 
 //    free(ready[HIGH]);
 //    free(ready[NORMAL]);
