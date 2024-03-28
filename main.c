@@ -66,7 +66,7 @@ int main() {
             }
             case 'N':
             {
-                printf("New Semaphore");
+                printf("New Semaphore\n");
                 int sid= -1;
                 int initialValue=-1;
                 do {
@@ -83,7 +83,7 @@ int main() {
             }
             case 'P':
             {
-                printf("Semaphore P");
+                printf("Semaphore P\n");
                 int sid= -1;
                 do {
                     printf("Enter the Semaphore ID (Between 0 to 4) : \n");
@@ -94,13 +94,24 @@ int main() {
             }
             case 'V':
             {
-                printf("Semaphore P");
+                printf("Semaphore P\n");
                 int sid= -1;
                 do {
                     printf("Enter the Semaphore ID (Between 0 to 4) : \n");
                     scanf("%d", &sid);
                 }while(sid > 4 || sid < 0);
                 SemaphoreV(sid);
+                break;
+            }
+            case 'I':
+            {
+                printf("Process Info:\n");
+                getPIDfromUser();
+                break;
+            }
+            case 'T':
+            {
+                totalInfo();
                 break;
             }
             default: {

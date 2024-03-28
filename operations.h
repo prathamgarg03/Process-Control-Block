@@ -11,10 +11,18 @@ int Kill(int);
 int Exit();
 void Quantum();
 void Send(int, char *);
-int Send(int pid, char* msg);
+int Send(int pid, char* message);
 void Receive();
 int newSemaphore(int sid,int initialValue);
 void SemaphoreP(int sid);
 void SemaphoreV(int sid);
 Semaphore* getSemaphoreFromId(int sid);
+
+void getPIDfromUser();
+
+PCB *getProcessFromId(int pid);
+void processInfo(int pid);
+
+void totalInfo();
+
 #endif

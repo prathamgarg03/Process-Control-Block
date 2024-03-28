@@ -9,11 +9,12 @@
 #define MAX_SEMAPHORES 5
 
 static int PID = 0;
-List * readyProcesses[PRIORITY];
-PCB * runningProcess;
-List * send;
-List * receive;
-List * semaphoreQueue;
+List *readyProcesses[PRIORITY];
+PCB *runningProcess;
+List *send;
+List *receive;
+List *semaphoreQueue;
+
 
 void ListInit() {
     readyProcesses[HIGH] = List_create();
@@ -44,24 +45,24 @@ void ProcessSchedule() {
 
 int Create(int priority) {
     PID++;
-    PCB * process = malloc(sizeof (PCB));
+    PCB *process = malloc(sizeof(PCB));
     process->ID = PID;
     process->state = READY;
     process->priority = priority;
-    process->message = (Message *) malloc(sizeof (Message));
-    process->message->content = (char *) malloc(sizeof (char) * MAX_MESSAGE_CHARACTERS);
+    process->message = (Message *) malloc(sizeof(Message));
+    process->message->content = (char *) malloc(sizeof(char) * MAX_MESSAGE_CHARACTERS);
 
-    if(!runningProcess) {
+    if (!runningProcess) {
         process->state = RUNNING;
         runningProcess = process;
     } else {
         List_prepend(readyProcesses[priority], process);
-        char* priorityNames[] = {
+        char *priorityNames[] = {
                 "HIGH",
                 "NORMAL",
                 "LOW"
         };
-        printList(priorityNames[priority] , readyProcesses[priority]);
+        printList(priorityNames[priority], readyProcesses[priority]);
     }
     return PID;
 }
@@ -71,12 +72,12 @@ int Fork() {
 }
 
 int Kill(int id) {
-    if(runningProcess->ID == id) {
+    if (runningProcess->ID == id) {
         Exit();
     }
     for (int i = 0; i < PRIORITY; i++) {
         if (isProcessFound(readyProcesses[i], id)) {
-            PCB * removedProcess = List_remove(readyProcesses[i]);
+            PCB *removedProcess = List_remove(readyProcesses[i]);
             return freeProcess(removedProcess);
         }
     }
@@ -91,19 +92,19 @@ int Exit() {
 
 void Quantum() {
     if (runningProcess) {
-        PCB * readyProcess = runningProcess;
+        PCB *readyProcess = runningProcess;
         readyProcess->state = READY;
         List_prepend(readyProcesses[readyProcess->priority], readyProcess);
-        printf("PID: %d placed on ready queue. \n",readyProcess->ID);
+        printf("PID: %d placed on ready queue. \n", readyProcess->ID);
     }
     ProcessSchedule();
 }
 
-void Send(int id, char * message) {
-    if(runningProcess) {
-        PCB * sender = runningProcess;
-        if(isProcessFound(receive, id)) {
-            PCB * receiver = List_remove(receive);
+void Send(int id, char *message) {
+    if (runningProcess) {
+        PCB *sender = runningProcess;
+        if (isProcessFound(receive, id)) {
+            PCB *receiver = List_remove(receive);
 
             receiver->message->senderID = sender->ID;
             strcpy(receiver->message->content, message);
@@ -122,69 +123,185 @@ void Send(int id, char * message) {
     }
     ProcessSchedule();
 }
-int newSemaphore(int sid,int initialValue) {
+
+int newSemaphore(int sid, int initialValue) {
 
     printf("Checked that the given sid already exists or not ");
     Semaphore *sem = getSemaphoreFromId(sid);
-    if(sem!=NULL){
+    if (sem != NULL) {
         printf("FAIL!! Semaphore Already Exists.");
         return -1;
-    }
-    else{
+    } else {
         printf("SUCCESS!! Added Semaphore to the list");
-        Semaphore  newSem;
+        Semaphore newSem;
         newSem.ID = sid;
         newSem.value = initialValue;
-        newSem.list=List_create();
+        newSem.list = List_create();
         return 0;
     }
 }
 
-void SemaphoreP(int sid)
-{
-    Semaphore *semaphore= getSemaphoreFromId(sid);
-    if(semaphore==NULL)
-    {
-        printf("ERROR!! Semaphore doesn't exist");
+void SemaphoreP(int sid) {
+    Semaphore *semaphore = getSemaphoreFromId(sid);
+    if (semaphore == NULL) {
+        printf("ERROR!! Semaphore doesn't exist\n");
+        printf("FAIL\n");
         return;
     }
     semaphore->value--;
-    if(semaphore->value < 0)
-    {
-        Node *foundNode;
+    if (semaphore->value < 0) {
         runningProcess->state = BLOCKED;
-        for(int i=0;i<PRIORITY;i++) {
-            COMPARATOR_FN comparator = (COMPARATOR_FN) &compareID;
-            foundNode = List_search(readyProcesses[i], comparator, (void *) &runningProcess->ID);
-        }
-        if(foundNode!= NULL) {
-            List_remove(readyProcesses[runningProcess->ID]);
-        }
-        List_append(semaphore->list,runningProcess);
+        printf("Changed the state of currently running process from RUNNING to BLOCKED The Current Process. PID : %d \n",
+               semaphore->ID);
+
+        List_prepend(semaphore->list, runningProcess);
+        printf("SUCCESS\n");
     }
+    ProcessSchedule();
 }
 
-void SemaphoreV(int sid)
-{
+
+void SemaphoreV(int sid) {
     Semaphore *semaphore = getSemaphoreFromId(sid);
     semaphore->value++;
-    if(semaphore->value <= 0)
-    {
+    if (semaphore->value <= 0) {
         List_first(semaphore->list);
-        PCB* processFromRunningToReady = List_remove(semaphore->list);
-        processFromRunningToReady->state =  READY;
+        PCB *processFromRunningToReady = List_remove(semaphore->list);
+        processFromRunningToReady->state = READY;
+        printf("Changed the state from BLOCKED to READY . PID : %d \n", semaphore->ID);
+
         List_prepend(readyProcesses[processFromRunningToReady->priority], processFromRunningToReady);
     }
 }
 
-Semaphore* getSemaphoreFromId(int sid) {
-    Semaphore * temp = List_first(semaphoreQueue);
-    for(int i=0;i< List_count(semaphoreQueue);i++)
-    {
-        if(temp->ID == sid)
-            return temp;
+//Semaphore* getSemaphoreFromId(int sid) {
+//    Semaphore * temp = List_first(semaphoreQueue);
+//    for(int i=0;i< List_count(semaphoreQueue);i++)
+//    {
+//        if(temp->ID == sid)
+//            return temp;
+//
+//        List_next(semaphoreQueue);
+//    }
+//    return NULL;
+//}
 
-        List_next(semaphoreQueue);
+Semaphore *getSemaphoreFromId(int sid) {
+    printf("Finding the Semaphore by its ID");
+    int (*comparator)(void *, void *);
+    Node *node;
+    comparator = &compareID;
+    List_first(semaphoreQueue);
+    node = List_search(semaphoreQueue, (COMPARATOR_FN) comparator, (void *) &sid);
+    if (node) {
+        return node->pItem;
+    } else {
+        return NULL;
+    }
+}
+
+void getPIDfromUser() {
+    int pid = -1;
+    bool isfound = false;
+
+    while (!isfound) {
+        printf("Enter the PID of the process you want information about: ");
+        scanf("%d", &pid);
+
+        for (int i = 0; i < PRIORITY; i++) {
+            isfound = isProcessFound(readyProcesses[i], pid);
+            if (isfound) {
+                processInfo(pid);
+                break;
+            }
+        }
+
+        if (!isfound) {
+            printf("Process with PID %d not found in any queue. Please try again.\n", pid);
+        }
+    }
+}
+
+PCB *getProcessFromId(int pid) {
+    printf("Finding the Process by its ID\n");
+    int (*comparator)(void *, void *);
+    Node *node;
+    PCB *process;
+
+    comparator = &compareID;
+
+    for (int i = 0; i < PRIORITY; i++) {
+        List_first(readyProcesses[i]);
+        node = List_search(readyProcesses[i], (COMPARATOR_FN) comparator, (void *) &pid);
+        if (node) {
+            process = (PCB *)node->pItem;
+            return process;
+        }
     }
     return NULL;
 }
+
+void processInfo(int pid) {
+    PCB * p_block = getProcessFromId(pid);
+    printf("PROCESS ID : %d\n",p_block->ID);
+    char* state;
+    if(p_block->state==RUNNING)
+        state="RUNNING";
+    else if(p_block->state == READY)
+        state="READY";
+    else
+        state="BLOCKED";
+
+    printf("PROCESS STATE : %s\n",state);
+
+char* priority;
+    if(p_block->priority==0)
+    {
+        priority="HIGH PRIORITY LIST";
+    }
+    else if(p_block->priority==1)
+    {
+        priority="NORMAL PRIORITY LIST";
+    }
+    else
+    {
+        priority="LOW PRIORITY LIST";
+    }
+    printf("PROCESS IS IN : %s",priority);
+    printf("PROCESS MESSAGGE : %s\n",p_block->message->content);
+}
+
+void totalInfo() {
+    printf("PROCESS QUEUES\n");
+    int i;
+
+    for (i = 0; i < PRIORITY; i++) {
+        Node *current = List_first(readyProcesses[i]);
+
+        while (current != NULL) {
+            PCB *process = (PCB *)current->pItem;
+            processInfo(process->ID);
+
+            current = List_next(readyProcesses[i]);
+        }
+    }
+
+    // Print semaphore information
+    printf("SEM QUEUES\n");
+    int count = List_count(semaphoreQueue);
+    if (count > 0) {
+        Node *current = List_first(semaphoreQueue);
+
+        while (current != NULL) {
+            Semaphore *semaphore = (Semaphore *)current->pItem;
+
+            printf("Semaphore ID: %d, Value: %d\n", semaphore->ID, semaphore->value);
+            printf("Blocked Processes: ");
+            current = List_next(semaphoreQueue);
+        }
+    }
+}
+
+
+
+
