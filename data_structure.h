@@ -15,17 +15,10 @@ enum ProcessState {
     BLOCKED
 };
 
-enum MessageStatus {
-    SEND,
-    RECEIVE,
-    REPLY
-};
-
 typedef struct {
     char * content;
     int senderID;
     int receiverID;
-    enum MessageStatus status;
 } Message;
 
 typedef struct {

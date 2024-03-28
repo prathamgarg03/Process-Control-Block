@@ -6,6 +6,8 @@
 #include "stdio.h"
 
 int compareID(void *, void *);
-void printList(List *);
+void printList(char *, List *);
+bool isProcessFound(List *, int);
+int freeProcess(PCB *);
 
 #endif

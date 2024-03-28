@@ -3,8 +3,6 @@
 #include <ctype.h>
 #include "operations.h"
 
-
-
 int main() {
 
     ListInit();
@@ -14,16 +12,6 @@ int main() {
         scanf(" %c", &command);
         command = toupper(command);
         switch (command) {
-            case 'A':
-            {
-                int priority = 0;
-                do {
-                    printf("Enter Priority: ");
-                    scanf(" %d", &priority);
-                } while (priority != HIGH && priority != NORMAL && priority != LOW);
-                addToRunningProc(priority);
-                break;
-            }
             case 'C': {
                 printf("Create \n");
                 printf("create a process and put it on the appropriate ready Queue.\n");
@@ -45,7 +33,7 @@ int main() {
             case 'K': {
                 printf("Kill\n");
                 printf("kill the named process and remove it from the system.\n");
-                printf("pid to remove: ");
+                printf("PID to remove: ");
                 int p = -1;
                 scanf(" %d", &p);
 
@@ -59,16 +47,28 @@ int main() {
                 printf("Killed PID: %d \n", id);
                 break;
             }
-            case 'Q' :
-            {
+            case 'Q' : {
                 printf("Quantum\n");
+                printf("time quantum of running process expires.\n");
                 Quantum();
                 break;
+            }
+            case 'S': {
+                printf("Send\n");
+                printf("send a message to another process - block until reply\n");
+                printf("PID to send: ");
+                int p = -1;
+                scanf(" %d", &p);
+                printf("Message to send: ");
+                char * message = "Hello123";
+//                scanf(" %s", message);
+                Send(p, message);
             }
             default: {
                 printf("Invalid Argument.\n");
                 break;
             }
+            
         }
 
 

@@ -1,3 +1,4 @@
+#include <stdlib.h>
 #include "helper.h"
 
 int compareID(void * pItem, void * pComparisonArg) {
@@ -9,8 +10,8 @@ int compareID(void * pItem, void * pComparisonArg) {
     return 0;
 }
 
-void printList(List * list) {
-    printf("List: ");
+void printList(char * listName, List * list) {
+    printf("%s List: ", listName);
     Node *temp = list->pFirstNode;
     while (temp->pNext!= NULL) {
         PCB *it = temp->pItem;
@@ -21,4 +22,20 @@ void printList(List * list) {
     printf(" %d ", *(int *)it);
     temp = temp->pNext;
     printf("\n");
+}
+
+bool isProcessFound(List * list, int id) {
+    COMPARATOR_FN comparator = (COMPARATOR_FN) &compareID;
+    if(List_search(list, comparator, (void *)&id)) {
+        return true;
+    }
+    return false;
+}
+
+int freeProcess(PCB * process) {
+    int freedProcessID = process->ID;
+    free(process->message->content);
+    free(process->message);
+    free(process);
+    return freedProcessID;
 }
