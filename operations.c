@@ -13,7 +13,7 @@ List * readyProcesses[PRIORITY];
 PCB * runningProcess;
 List * send;
 List * receive;
-
+List * semaphoreQueue;
 
 void ListInit() {
     readyProcesses[HIGH] = List_create();
@@ -21,6 +21,7 @@ void ListInit() {
     readyProcesses[LOW] = List_create();
     send = List_create();
     receive = List_create();
+    semaphoreQueue = List_create();
 }
 
 void ProcessSchedule() {
@@ -120,4 +121,70 @@ void Send(int id, char * message) {
         printf("No sender available to send message.\n");
     }
     ProcessSchedule();
+}
+int newSemaphore(int sid,int initialValue) {
+
+    printf("Checked that the given sid already exists or not ");
+    Semaphore *sem = getSemaphoreFromId(sid);
+    if(sem!=NULL){
+        printf("FAIL!! Semaphore Already Exists.");
+        return -1;
+    }
+    else{
+        printf("SUCCESS!! Added Semaphore to the list");
+        Semaphore  newSem;
+        newSem.ID = sid;
+        newSem.value = initialValue;
+        newSem.list=List_create();
+        return 0;
+    }
+}
+
+void SemaphoreP(int sid)
+{
+    Semaphore *semaphore= getSemaphoreFromId(sid);
+    if(semaphore==NULL)
+    {
+        printf("ERROR!! Semaphore doesn't exist");
+        return;
+    }
+    semaphore->value--;
+    if(semaphore->value < 0)
+    {
+        Node *foundNode;
+        runningProcess->state = BLOCKED;
+        for(int i=0;i<PRIORITY;i++) {
+            COMPARATOR_FN comparator = (COMPARATOR_FN) &compareID;
+            foundNode = List_search(readyProcesses[i], comparator, (void *) &runningProcess->ID);
+        }
+        if(foundNode!= NULL) {
+            List_remove(readyProcesses[runningProcess->ID]);
+        }
+        List_append(semaphore->list,runningProcess);
+    }
+}
+
+void SemaphoreV(int sid)
+{
+    Semaphore *semaphore = getSemaphoreFromId(sid);
+    semaphore->value++;
+    if(semaphore->value <= 0)
+    {
+        List_first(semaphore->list);
+        PCB* processFromRunningToReady = List_remove(semaphore->list);
+        processFromRunningToReady->state =  READY;
+        List_prepend(readyProcesses[processFromRunningToReady->priority], processFromRunningToReady);
+    }
+}
+
+Semaphore* getSemaphoreFromId(int sid) {
+    Semaphore * temp = List_first(semaphoreQueue);
+    for(int i=0;i< List_count(semaphoreQueue);i++)
+    {
+        if(temp->ID == sid)
+            return temp;
+
+        List_next(semaphoreQueue);
+    }
+    return NULL;
 }

@@ -64,6 +64,45 @@ int main() {
 //                scanf(" %s", message);
                 Send(p, message);
             }
+            case 'N':
+            {
+                printf("New Semaphore");
+                int sid= -1;
+                int initialValue=-1;
+                do {
+                    printf("Enter the Semaphore ID (Between 0 to 4) : \n");
+                    scanf("%d", &sid);
+                }while(sid > 4 || sid < 0);
+
+                do {
+                    printf("\n Enter the Initial Value for the Semaphore (0 or Higher): \n");
+                    scanf("%d", &initialValue);
+                }while(initialValue < 0);
+                newSemaphore(sid,initialValue);
+                break;
+            }
+            case 'P':
+            {
+                printf("Semaphore P");
+                int sid= -1;
+                do {
+                    printf("Enter the Semaphore ID (Between 0 to 4) : \n");
+                    scanf("%d", &sid);
+                }while(sid > 4 || sid < 0);
+                SemaphoreP(sid);
+                break;
+            }
+            case 'V':
+            {
+                printf("Semaphore P");
+                int sid= -1;
+                do {
+                    printf("Enter the Semaphore ID (Between 0 to 4) : \n");
+                    scanf("%d", &sid);
+                }while(sid > 4 || sid < 0);
+                SemaphoreV(sid);
+                break;
+            }
             default: {
                 printf("Invalid Argument.\n");
                 break;
