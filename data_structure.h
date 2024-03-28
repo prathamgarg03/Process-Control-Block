@@ -16,17 +16,17 @@ enum ProcessState {
 };
 
 typedef struct {
-    char * content;
-    int senderID;
-    int receiverID;
-} Message;
-
-typedef struct {
     int ID;
     enum ProcessPriority priority;
     enum ProcessState state;
-    Message * message;
+    char * message;
 } PCB;
+
+typedef struct {
+    char * content;
+    int senderID;
+    int receiverID;
+} MessagePacket;
 
 typedef struct {
     int ID;

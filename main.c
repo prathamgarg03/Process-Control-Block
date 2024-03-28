@@ -60,58 +60,16 @@ int main() {
                 int p = -1;
                 scanf(" %d", &p);
                 printf("Message to send: ");
-                char * message = "Hello123";
-//                scanf(" %s", message);
+                char * message = malloc(sizeof (char *));
+                scanf(" %s", message);
                 Send(p, message);
-            }
-            case 'N':
-            {
-                printf("New Semaphore\n");
-                int sid= -1;
-                int initialValue=-1;
-                do {
-                    printf("Enter the Semaphore ID (Between 0 to 4) : \n");
-                    scanf("%d", &sid);
-                }while(sid > 4 || sid < 0);
-
-                do {
-                    printf("\n Enter the Initial Value for the Semaphore (0 or Higher): \n");
-                    scanf("%d", &initialValue);
-                }while(initialValue < 0);
-                newSemaphore(sid,initialValue);
+                free(message);
                 break;
             }
-            case 'P':
-            {
-                printf("Semaphore P\n");
-                int sid= -1;
-                do {
-                    printf("Enter the Semaphore ID (Between 0 to 4) : \n");
-                    scanf("%d", &sid);
-                }while(sid > 4 || sid < 0);
-                SemaphoreP(sid);
-                break;
-            }
-            case 'V':
-            {
-                printf("Semaphore P\n");
-                int sid= -1;
-                do {
-                    printf("Enter the Semaphore ID (Between 0 to 4) : \n");
-                    scanf("%d", &sid);
-                }while(sid > 4 || sid < 0);
-                SemaphoreV(sid);
-                break;
-            }
-            case 'I':
-            {
-                printf("Process Info:\n");
-                getPIDfromUser();
-                break;
-            }
-            case 'T':
-            {
-                totalInfo();
+            case 'R': {
+                printf("Receive\n");
+                printf("receive a message - block until one arrives\n");
+                Recieve();
                 break;
             }
             default: {
