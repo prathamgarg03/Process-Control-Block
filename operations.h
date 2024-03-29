@@ -4,15 +4,16 @@
 #include "data_structure.h"
 
 void ListInit();
-//void addToRunningProc(int priority);
 int Create(int);
 int Fork();
 int Kill(int);
 int Exit();
 void Quantum();
 void Send(int, char *);
-int Send(int pid, char* message);
-void Receive();
+void Recieve();
+void Reply(int, char *);
+void TotalInfo();
+
 int newSemaphore(int sid,int initialValue);
 void SemaphoreP(int sid);
 void SemaphoreV(int sid);
@@ -22,7 +23,4 @@ void getPIDfromUser();
 
 PCB *getProcessFromId(int pid);
 void processInfo(int pid);
-
-void totalInfo();
-
 #endif

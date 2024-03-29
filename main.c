@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <ctype.h>
+#include "string.h"
 #include "operations.h"
 
 int main() {
@@ -60,9 +61,36 @@ int main() {
                 int p = -1;
                 scanf(" %d", &p);
                 printf("Message to send: ");
-                char * message = "Hello123";
-//                scanf(" %s", message);
+                char * message = malloc(sizeof (char *));
+                scanf("40%s", message);
                 Send(p, message);
+                free(message);
+                break;
+            }
+            case 'R': {
+                printf("Receive\n");
+                printf("receive a message - block until one arrives\n");
+                Recieve();
+                break;
+            }
+            case 'Y': {
+                printf("Reply\n");
+                printf("unblocks sender and delivers reply\n");
+                printf("PID to send: ");
+                int p = -1;
+                scanf(" %d", &p);
+                printf("Message to send: ");
+                char * message = malloc(sizeof (char *));
+                scanf("40%s", message);
+                Reply(p, message);
+                free(message);
+                break;
+            }
+            case 'T': {
+                printf("Total Info\n");
+                printf("display all process queues and their contents\n");
+                TotalInfo();
+                break;
             }
             case 'N':
             {
@@ -75,7 +103,7 @@ int main() {
                 }while(sid > 4 || sid < 0);
 
                 do {
-                    printf("\n Enter the Initial Value for the Semaphore (0 or Higher): \n");
+                    printf("\nEnter the Initial Value for the Semaphore (0 or Higher): \n");
                     scanf("%d", &initialValue);
                 }while(initialValue < 0);
                 newSemaphore(sid,initialValue);
@@ -109,16 +137,11 @@ int main() {
                 getPIDfromUser();
                 break;
             }
-            case 'T':
-            {
-                totalInfo();
-                break;
-            }
             default: {
                 printf("Invalid Argument.\n");
                 break;
             }
-            
+
         }
 
 
