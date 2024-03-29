@@ -12,5 +12,5 @@ void Quantum();
 void Send(int, char *);
 void Recieve();
 void Reply(int, char *);
-
+void TotalInfo();
 #endif

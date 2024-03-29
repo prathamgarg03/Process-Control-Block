@@ -86,6 +86,12 @@ int main() {
                 free(message);
                 break;
             }
+            case 'T': {
+                printf("Total Info\n");
+                printf("display all process queues and their contents\n");
+                TotalInfo();
+                break;
+            }
             default: {
                 printf("Invalid Argument.\n");
                 break;

@@ -5,10 +5,10 @@
 #include "data_structure.h"
 #include "stdio.h"
 
-void printList(char *, List *);
 bool isProcessFound(List *, int);
 int freeProcess(PCB *);
 bool anyMessage(List *, int);
 char* freeMessage(MessagePacket *);
+void printList(char *, List *);
 
 #endif

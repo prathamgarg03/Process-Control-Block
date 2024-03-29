@@ -55,12 +55,6 @@ int Create(int priority) {
         runningProcess = process;
     } else {
         List_prepend(readyProcesses[priority], process);
-        char* priorityNames[] = {
-                "HIGH",
-                "NORMAL",
-                "LOW"
-        };
-        printList(priorityNames[priority] , readyProcesses[priority]);
     }
     return PID;
 }
@@ -157,4 +151,16 @@ void Reply(int id, char * message) {
     } else {
         printf("No sender available to reply.\n");
     }
+}
+
+void TotalInfo() {
+    char* priorityNames[] = {
+            "HIGH priority ready",
+            "NORMAL priority ready",
+            "LOW priority ready"
+    };
+    for(int i = 0; i < PRIORITY; i++) {
+        printList(priorityNames[i] , readyProcesses[i]);
+    }
+
 }
