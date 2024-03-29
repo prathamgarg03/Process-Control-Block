@@ -148,9 +148,11 @@ void Reply(int id, char * message) {
         PCB * reply = runningProcess;
         if(isProcessFound(send, id)) {
             PCB * sender = List_remove(send);
-            
+            strcpy(sender->message, message);
+            sender->state = READY;
+            List_prepend(readyProcesses[sender->priority], sender);
         } else {
-
+            printf("No process available to reply to.\n");
         }
     } else {
         printf("No sender available to reply.\n");

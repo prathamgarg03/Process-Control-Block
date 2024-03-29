@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <ctype.h>
+#include "string.h"
 #include "operations.h"
 
 int main() {
@@ -61,7 +62,7 @@ int main() {
                 scanf(" %d", &p);
                 printf("Message to send: ");
                 char * message = malloc(sizeof (char *));
-                scanf(" %s", message);
+                scanf("40%s", message);
                 Send(p, message);
                 free(message);
                 break;
@@ -70,6 +71,19 @@ int main() {
                 printf("Receive\n");
                 printf("receive a message - block until one arrives\n");
                 Recieve();
+                break;
+            }
+            case 'Y': {
+                printf("Reply\n");
+                printf("unblocks sender and delivers reply\n");
+                printf("PID to send: ");
+                int p = -1;
+                scanf(" %d", &p);
+                printf("Message to send: ");
+                char * message = malloc(sizeof (char *));
+                scanf("40%s", message);
+                Reply(p, message);
+                free(message);
                 break;
             }
             default: {
