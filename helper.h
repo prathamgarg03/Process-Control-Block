@@ -10,5 +10,7 @@ int freeProcess(PCB *);
 bool anyMessage(List *, int);
 char* freeMessage(MessagePacket *);
 void printList(char *, List *);
-int compareID(void * pItem, void * pComparisonArg);
+bool isSemaphoreFound(List *, int);
+void printInfo(PCB *, int);
+
 #endif
