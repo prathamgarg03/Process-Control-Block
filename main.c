@@ -5,11 +5,27 @@
 #include "operations.h"
 
 int main() {
-
+//e,k,f,c
     ListInit();
     char command;
     do {
-        printf("Enter Command: ");
+        printf("\n-------------------------------------------------\n");
+        printf("C - Create \n");
+        printf("F - Fork \n");
+        printf("K - Kill \n");
+        printf("E - Exit \n");
+        printf("Q - Quantum \n");
+        printf("S - Send \n");
+        printf("R - Receive \n");
+        printf("Y - Reply \n");
+        printf("N - New Semaphore \n");
+        printf("P - Semaphore P \n");
+        printf("V - Semaphore V \n");
+        printf("I - Process Information \n");
+        printf("T - Total Information \n");
+        printf("X - Exit Program \n");
+        printf("Enter Command: \n");
+
         scanf(" %c", &command);
         command = toupper(command);
         switch (command) {
@@ -23,34 +39,45 @@ int main() {
                 } while (priority != HIGH && priority != NORMAL && priority != LOW);
                 int id = Create(priority);
                 printf("PID: %d \n", id);
+                printf("SUCCESS!! A New Process Was Created.\n");
                 break;
             }
             case 'F': {
                 printf("Fork\n");
                 printf("Copy the currently running process and put it on the ready Q corresponding to the original process' priority.\n");
-                Fork();
+                int id = Fork();
+                printf("PID: %d \n", id);
+                printf("SUCCESS\n");
                 break;
             }
             case 'K': {
                 printf("Kill\n");
-                printf("kill the named process and remove it from the system.\n");
+                printf("Kill the named process and remove it from the system.\n");
                 printf("PID to remove: ");
                 int p = -1;
                 scanf(" %d", &p);
 
-                Kill(p);
+                int isKill = Kill(p);
+                if(isKill == -1)
+                    printf("FAIL!! The PID did not Exist.\n");
+                else
+                    printf("SUCCESS!! The PID Process was Killed.\n");
                 break;
             }
             case 'E': {
                 printf("Exit\n");
-                printf("kill the currently running process.\n");
+                printf("Kill the currently running process.\n");
                 int id = Exit();
                 printf("Killed PID: %d \n", id);
+                if(id == -1)
+                    printf("FAIL!! The Current Process was not Killed.\n");
+                else
+                    printf("SUCCESS!! The Current Process was Killed.\n");
                 break;
             }
             case 'Q' : {
                 printf("Quantum\n");
-                printf("time quantum of running process expires.\n");
+                printf("Time quantum of running process expires.\n");
                 Quantum();
                 break;
             }
@@ -122,7 +149,7 @@ int main() {
             }
             case 'V':
             {
-                printf("Semaphore P\n");
+                printf("Semaphore V\n");
                 int sid= -1;
                 do {
                     printf("Enter the Semaphore ID (Between 0 to 4) : \n");
