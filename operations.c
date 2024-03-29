@@ -224,25 +224,6 @@ void getPIDfromUser() {
     }
 }
 
-PCB * doesProcessExist(int pid) {
-    if(runningProcess->ID == pid) {
-        return runningProcess;
-    }
-    for(int i = 0; i < PRIORITY; i++) {
-        if(isProcessFound(readyProcesses[i], pid)) {
-            return List_remove(readyProcesses[i]);
-        }
-    }
-    if(isProcessFound(send, pid)) {
-        return List_remove(send);
-    } else if(isProcessFound(receive, pid)) {
-        return List_remove(receive);
-    } else if(isProcessFound(semaphoreQueue, pid)) {
-        return List_remove(semaphoreQueue);
-    }
-    return NULL;
-}
-
 void processInfo(int pid) {
     if(runningProcess->ID == pid) {
         printInfo(runningProcess, 0);
