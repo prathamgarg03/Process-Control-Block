@@ -13,14 +13,10 @@ void Send(int, char *);
 void Recieve();
 void Reply(int, char *);
 void TotalInfo();
-
 int newSemaphore(int sid,int initialValue);
 void SemaphoreP(int sid);
 void SemaphoreV(int sid);
-Semaphore* getSemaphoreFromId(int sid);
-
 void getPIDfromUser();
-
-PCB *getProcessFromId(int pid);
 void processInfo(int pid);
+
 #endif
