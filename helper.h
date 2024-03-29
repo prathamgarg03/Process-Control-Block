@@ -6,9 +6,15 @@
 #include "stdio.h"
 
 bool isProcessFound(List *, int);
+
 int freeProcess(PCB *);
+
 bool anyMessage(List *, int);
-char* freeMessage(MessagePacket *);
+
+char *freeMessage(MessagePacket *);
+
 void printList(char *, List *);
-int compareID(void * pItem, void * pComparisonArg);
+
+int compareID(void *pItem, void *pComparisonArg);
+
 #endif

@@ -58,7 +58,7 @@ int main() {
                 scanf(" %d", &p);
 
                 int isKill = Kill(p);
-                if(isKill == -1)
+                if (isKill == -1)
                     printf("FAIL!! The PID did not Exist.\n");
                 else
                     printf("SUCCESS!! The PID Process was Killed.\n");
@@ -69,7 +69,7 @@ int main() {
                 printf("Kill the currently running process.\n");
                 int id = Exit();
                 printf("Killed PID: %d \n", id);
-                if(id == -1)
+                if (id == -1)
                     printf("FAIL!! The Current Process was not Killed.\n");
                 else
                     printf("SUCCESS!! The Current Process was Killed.\n");
@@ -88,7 +88,7 @@ int main() {
                 int p = -1;
                 scanf(" %d", &p);
                 printf("Message to send: ");
-                char * message = malloc(sizeof (char *));
+                char *message = malloc(sizeof(char *));
                 scanf("40%s", message);
                 Send(p, message);
                 free(message);
@@ -107,7 +107,7 @@ int main() {
                 int p = -1;
                 scanf(" %d", &p);
                 printf("Message to send: ");
-                char * message = malloc(sizeof (char *));
+                char *message = malloc(sizeof(char *));
                 scanf("40%s", message);
                 Reply(p, message);
                 free(message);
@@ -119,47 +119,43 @@ int main() {
                 TotalInfo();
                 break;
             }
-            case 'N':
-            {
+            case 'N': {
                 printf("New Semaphore\n");
-                int sid= -1;
-                int initialValue=-1;
+                int sid = -1;
+                int initialValue = -1;
                 do {
                     printf("Enter the Semaphore ID (Between 0 to 4) : \n");
                     scanf("%d", &sid);
-                }while(sid > 4 || sid < 0);
+                } while (sid > 4 || sid < 0);
 
                 do {
                     printf("\nEnter the Initial Value for the Semaphore (0 or Higher): \n");
                     scanf("%d", &initialValue);
-                }while(initialValue < 0);
-                newSemaphore(sid,initialValue);
+                } while (initialValue < 0);
+                newSemaphore(sid, initialValue);
                 break;
             }
-            case 'P':
-            {
+            case 'P': {
                 printf("Semaphore P\n");
-                int sid= -1;
+                int sid = -1;
                 do {
                     printf("Enter the Semaphore ID (Between 0 to 4) : \n");
                     scanf("%d", &sid);
-                }while(sid > 4 || sid < 0);
+                } while (sid > 4 || sid < 0);
                 SemaphoreP(sid);
                 break;
             }
-            case 'V':
-            {
+            case 'V': {
                 printf("Semaphore V\n");
-                int sid= -1;
+                int sid = -1;
                 do {
                     printf("Enter the Semaphore ID (Between 0 to 4) : \n");
                     scanf("%d", &sid);
-                }while(sid > 4 || sid < 0);
+                } while (sid > 4 || sid < 0);
                 SemaphoreV(sid);
                 break;
             }
-            case 'I':
-            {
+            case 'I': {
                 printf("Process Info:\n");
                 getPIDfromUser();
                 break;
