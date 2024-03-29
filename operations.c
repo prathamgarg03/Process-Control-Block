@@ -181,6 +181,7 @@ int newSemaphore(int sid, int initialValue) {
         newSem->ID = sid;
         newSem->value = initialValue;
         newSem->list = List_create();
+        List_prepend(semaphoreQueue,newSem);
         return 0;
     }
 }
@@ -236,21 +237,6 @@ Semaphore* getSemaphoreFromId(int sid) {
     return NULL;
 }
 
-//Semaphore *getSemaphoreFromId(int sid) {
-//    printf("Finding the Semaphore by its ID");
-//    if(List_count(semaphoreQueue)==0)
-//        return NULL;
-//    int (*comparator)(void *, void *);
-//    Node *node;
-//    comparator = &compareID;
-//    List_first(semaphoreQueue);
-//    node = List_search(semaphoreQueue, (COMPARATOR_FN) comparator, (void *) &sid);
-//    if (node) {
-//        return node->pItem;
-//    } else {
-//        return NULL;
-//    }
-//}
 
 void getPIDfromUser() {
     int pid = -1;
