@@ -15,7 +15,33 @@ List * send;
 List * receive;
 List * messages;
 List * semaphoreQueue;
+PCB * init;
 
+void runInit() {
+    init->ID = 0;
+    init->state = RUNNING;
+    runningProcess = init;
+}
+
+void readyInit() {
+    bool anyReadyQueueEmpty = false;
+    for (int i = 0; i < PRIORITY; i++) {
+        if (List_count(readyProcesses[i]) == 0) {
+            anyReadyQueueEmpty = true;
+            break;
+        }
+    }
+    if (!anyReadyQueueEmpty) {
+        init->state = READY;
+    } else if(anyReadyQueueEmpty && runningProcess == NULL) {
+        runInit();
+    }
+    bool allOtherQueuesEmpty = (List_count(send) == 0) && (List_count(receive) == 0) && (List_count(messages) == 0) && (List_count(semaphoreQueue) == 0);
+    if(anyReadyQueueEmpty && allOtherQueuesEmpty) {
+        printf("No process in any queue.\n");
+        exit(0);
+    }
+}
 
 void ListInit() {
     readyProcesses[HIGH] = List_create();
@@ -25,7 +51,10 @@ void ListInit() {
     receive = List_create();
     messages = List_create();
     semaphoreQueue=List_create();
+    init = malloc(sizeof (PCB));
+    runInit();
 }
+
 
 void ProcessSchedule() {
     int highest_priority = -1;
@@ -39,9 +68,11 @@ void ProcessSchedule() {
         PCB *next_process = List_trim(readyProcesses[highest_priority]);
         next_process->state = RUNNING;
         runningProcess = next_process;
+        readyInit();
         printf("Success! PID: %d now gets control of the CPU.\n", runningProcess->ID);
     } else {
         printf("No process available to run\n");
+        readyInit();
     }
 }
 
@@ -58,6 +89,7 @@ int Create(int priority) {
         runningProcess = process;
     } else {
         List_prepend(readyProcesses[priority], process);
+        readyInit();
     }
     return PID;
 }
@@ -73,6 +105,7 @@ int Kill(int id) {
     for (int i = 0; i < PRIORITY; i++) {
         if (isProcessFound(readyProcesses[i], id)) {
             PCB * removedProcess = List_remove(readyProcesses[i]);
+            readyInit();
             return freeProcess(removedProcess);
         }
     }

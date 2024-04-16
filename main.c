@@ -168,14 +168,8 @@ int main() {
                 printf("Invalid Argument.\n");
                 break;
             }
-
         }
-
-
     } while (command != 'X');
 
-//    free(ready[HIGH]);
-//    free(ready[NORMAL]);
-//    free(ready[LOW]);
     return 0;
 }
