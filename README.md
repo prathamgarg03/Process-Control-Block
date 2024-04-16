@@ -46,7 +46,7 @@ Sure, you can add the following section to your README file to guide users on ho
 2. Navigate to the project directory using the `cd` command.
 3. Compile the program using the `gcc` compiler. For example, if your main file is `main.c`, you would type:
 ```bash
-gcc -o main main.c operations.c helper.c
+gcc -o main main.c operations.c helper.c list.o
 ```
 4. Run the program by typing `./main`.
 
